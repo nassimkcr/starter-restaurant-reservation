@@ -28,18 +28,17 @@ function Dashboard({ date }) {
 
     async function loadDashboard() {
       setReservationsError(null);
-      const response = await listReservations({ date }, abortController.signal)
+      
+        const response = await listReservations({ date }, abortController.signal)
         setReservations(response)
         firstRender=1
     }
     loadDashboard()
-    console.log(reservations)
-    console.log(date)
     return () => abortController.abort();
 
   },[date]);
 
-  console.log(reservations)
+
 if(!reservations.length && firstRender){
   return(
     <main>
@@ -61,8 +60,8 @@ if(!reservations.length && firstRender){
       </div>
       <ErrorAlert error={reservationsError} />
       <div>
-       {reservations.map((reservation)=>{
-        return <ViewReservation reservation={reservation}/>
+       {reservations.map((reservation, index)=>{
+        return <ViewReservation reservation={reservation} key={index}/>
        })}
       </div>
     </main>

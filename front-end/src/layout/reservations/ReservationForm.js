@@ -1,0 +1,62 @@
+import React, {useState} from "react";
+import { Link, useHistory } from "react-router-dom";
+
+
+
+function ReservationForm({create}){
+    const [formData, setFormData] = useState({first_name:'', last_name:'', mobile_number:'', reservation_date:'', reservation_time:'', people:1})
+    const history = useHistory()
+
+    const handleChange = ({target})=>{
+        setFormData({...formData, [target.name]:target.value})
+    }
+    
+    const handleSubmit = (event)=>{
+        event.preventDefault()
+        const num = Number(formData.people)
+        formData.people = num
+        create(formData)
+    }
+    
+    return (
+        <div>
+            <form>
+              <div>
+                    <label htmlFor="first_name">First name</label>
+                    <input name="first_name" type="text" onChange={handleChange} value={formData.first_name}></input>
+              </div> 
+
+              <div>
+                    <label htmlFor="last_name">Last name</label>
+                    <input name="last_name" type="text" onChange={handleChange} value={formData.last_name}></input>
+              </div>
+
+              <div>
+                    <label htmlFor="mobile_number">Mobile Number</label>
+                    <input name="mobile_number" type="text" onChange={handleChange} value={formData.number}></input>
+              </div> 
+              <div>
+                    <label htmlFor="reservation_date">Date of reservation</label>
+                    <input name="reservation_date" type="date" onChange={handleChange} value={formData.reservation_date}></input>
+              </div> 
+              <div>
+                    <label htmlFor="reservation_time">Time of reservation</label>
+                    <input name="reservation_time" type="time" onChange={handleChange} value={formData.reservation_time}></input>
+              </div> 
+              <div>
+                    <label htmlFor="people">Number of People</label>
+                    <input name="people" type="number" onChange={handleChange} value={formData.people}></input>
+              </div> 
+             
+              <Link to="/dashboard">
+                  <button value="Cancel" className="btn btn-secondary">Cancel</button>
+              </Link>
+                  <button type="submit" className="btn btn-primary mx-2" onClick={handleSubmit}>Submit</button>
+            </form>
+            
+        </div>
+    )
+}
+
+
+export default ReservationForm

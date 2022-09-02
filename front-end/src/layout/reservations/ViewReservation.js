@@ -1,6 +1,6 @@
 
-function viewReservation({reservation}){
-    return <div>
+function viewReservation({reservation, index}){
+    return <div key={index}>
         <h4>Reservation Informations</h4>
       <p>First name: {reservation.first_name}</p> 
        <p>Last name: {reservation.last_name}</p>

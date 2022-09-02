@@ -9,12 +9,15 @@ const hasRequiredProperties = hasProperties("first_name", "last_name", "mobile_n
 
 function validateDateProperty(req, res, next){
   const {data: {reservation_date}={}}= req.body
-  
   const arr = reservation_date.split('-')
 
+  const reservationDate = new Date(reservation_date)
+  const day = reservationDate.getUTCDay()
+  const todayDate = new Date()
+  let errorMessage = ``
+  let errorExists = false
   if(arr.length < 3){
     next({ status: 400, message: `reservation_date: ${reservation_date} is not a date.` });
-
   }
 
   if(arr[0].length !== 4 || isNaN(arr[0])){
@@ -26,7 +29,19 @@ function validateDateProperty(req, res, next){
   if(arr[2].length !== 2 || isNaN(arr[2])){
     next({ status: 400, message: `reservation_date: ${reservation_date} is not a date.` });
   }
+  if(day == 2){
+    errorMessage = 'closed on Tuesdays'
+    errorExists=true
+  }
   
+  if(reservationDate < todayDate){
+    if(errorExists){errorMessage += ' and '}
+    errorMessage += 'only future reservations are allowed'
+    errorExists=1
+  }
+  if(errorExists){
+    next({ status: 400, message: `${errorMessage}` });
+  }
      next()
 
 }
@@ -46,11 +61,9 @@ function validateTimeProperty(req, res, next){
      next({ status: 400, message: `reservation_time: ${reservation_time} is not a time.` });
   }
   
-  
      next()
-  
-
 }
+
 
 function validatePeopleProperty(req, res, next){
   
