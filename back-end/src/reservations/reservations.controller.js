@@ -48,9 +48,7 @@ function validateDateProperty(req, res, next){
 
 function validateTimeProperty(req, res, next){
   const {data: {reservation_time}={}}= req.body
-  
   const arr = reservation_time.split(':')
-  
   if(arr.length < 2){
     next({ status: 400, message: `reservation_time: ${reservation_time} is not a time.` });
   }
@@ -60,6 +58,10 @@ function validateTimeProperty(req, res, next){
   if(arr[1].length !== 2 || isNaN(arr[1])){
      next({ status: 400, message: `reservation_time: ${reservation_time} is not a time.` });
   }
+  if(reservation_time < "10:30" || reservation_time>"21:30"){
+    next({ status: 400, message: `reservation_time: restaurent closed` });
+  }
+  
   
      next()
 }
