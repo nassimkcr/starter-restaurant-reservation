@@ -17,5 +17,8 @@ async function update(table_id, reservation_id){
     return knex('tables').select('*').where({table_id}).update({reservation_id})
 }
 
+async function finishReservation(table_id){
+    return knex('tables').select('*').where({table_id}).update({reservation_id: null})
+}
 
-module.exports={listByName, read, create, update}
+module.exports={listByName, read, create, update, finishReservation}

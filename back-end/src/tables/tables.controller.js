@@ -1,8 +1,7 @@
 const tablesService = require('./tables.service')
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 const reservationsService = require('../reservations/reservations.service')
-const hasProperties = require('../errors/hasProperties')
-
+const hasProperties = require('../errors/hasProperties');
 
 
 
@@ -79,32 +78,33 @@ async function update(req, res, next){
 
 }  
 
-/*
-
-  exports.up = function(knex) {
-    return knex.schema.createTable("tables", (table)=>{
-      table.increments("table_id").primary();
-      table.string("table_name");
-      table.integer("capacity");
-      table.integer("reservation_id").unsigned().notNullable();
-      table
-      .foreign("reservation_id")
-      .references("reservation_id")
-      .inTable("reservations")
-      .onDelete("cascade");
-
-      table.timestamps(true, true);
-    })
-  };
+async function validateFinishReservation(req, res, next){
+  const table = await tablesService.read(req.params.table_id)
   
-  exports.down = function(knex) {
-      return knex.schema.dropTable("tables");
-  };
-  */
+  if(!table){
+    return next({ status: 404, message: `${req.params.table_id}: table is not found` });
+  }
+
+  if(!table.reservation_id){
+      return next({ status: 400, message: `table is not occupied` });
+    }
+  return next() 
+}
+
+async function finishReservation(req, res, next){
+ 
+  await tablesService.finishReservation(req.params.table_id)
+  res.status(200).json({data: {message: 'Reservation finished'}})
+
+
+}
+
+
 
 
   module.exports={
     list,
     create: [hasRequiredProperties, hasValidPropreties, asyncErrorBoundary(create)],
-    update: [validateSeating, asyncErrorBoundary(update)]
+    update: [validateSeating, asyncErrorBoundary(update)],
+    finishReservation: [validateFinishReservation, asyncErrorBoundary(finishReservation)]
   }

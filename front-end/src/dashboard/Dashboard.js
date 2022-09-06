@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables } from "../utils/api";
+import { listReservations, listTables, finishReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import useQuery from "../utils/useQuery";
 import ViewReservation from "../layout/reservations/ViewReservation";
 import { today } from "../utils/date-time";
+import { useHistory } from "react-router";
+
 /**
  * Defines the dashboard page.
  * @param date
@@ -16,16 +18,17 @@ function Dashboard({ date }) {
   const[tables, setTables]= useState([])
   const todayDate = today()
   const query = useQuery();
+  const history = useHistory()
   let firstRender = 0
   date = query.get("date")
   
   if(!date){
     date = todayDate
   }
+  const abortController = new AbortController();
 
     
   useEffect(()=>{
-    const abortController = new AbortController();
 
     async function loadDashboard() {
       setReservationsError(null);
@@ -53,6 +56,17 @@ if(!reservations.length && firstRender){
     </main>
   )
 }
+
+
+
+async function deleteReservation(table_id){
+  if (window.confirm('Is this table ready to seat new guests? This cannot be undone.')) {
+    await finishReservation(table_id)
+    window.location.reload(false)
+
+  }
+
+}
   
 
   return (
@@ -76,6 +90,8 @@ if(!reservations.length && firstRender){
           return <div key={index}><p>Table name: {table.table_name}</p>
                       <p>Table capacity: {table.capacity}</p>
                       <p data-table-id-status={table.table_id}>Status: {table.reservation_id?'Occupied':'Free'}</p>
+                    
+                      {table.reservation_id?<button data-table-id-finish={table.table_id} onClick={()=>deleteReservation(table.table_id)}>Finish</button>:null}
                       <hr></hr>
             
             </div>})
