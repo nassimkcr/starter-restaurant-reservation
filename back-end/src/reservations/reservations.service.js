@@ -11,4 +11,8 @@ async function create(reservation){
     return knex("reservations").insert(reservation).returning("*").then((createdRecords)=>createdRecords[0])
 }
 
-module.exports = {list, listByDate, create}
+async function read(reservation_id){
+    return knex('reservations').select('*').where({reservation_id}).first()
+}
+
+module.exports = {list, listByDate, create, read}

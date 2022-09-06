@@ -1,5 +1,10 @@
 
-function viewReservation({reservation, index}){
+
+
+
+function ViewReservation({reservation, index}){
+    const {reservation_id} = reservation
+    console.log(reservation)
     return <div key={index}>
         <h4>Reservation Informations</h4>
       <p>First name: {reservation.first_name}</p> 
@@ -7,9 +12,12 @@ function viewReservation({reservation, index}){
        <p>Mobile number: {reservation.mobile_number}</p>
        <p>Reservation date: {reservation.reservation_date}</p>
        <p>Number of People: {reservation.people}</p>
+       <a href={`/reservations/${reservation_id}/seat`}>
+            <button type="button">Seat</button>
+       </a>
        <hr></hr>
     </div>
 }
 
 
-export default viewReservation
+export default ViewReservation

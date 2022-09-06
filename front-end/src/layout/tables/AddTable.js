@@ -1,20 +1,20 @@
 import React, {useState} from "react";
 import { Link, useHistory } from "react-router-dom";
-import { createReservation } from "../../utils/api";
-import ReservationForm from "./ReservationForm";
+import { createTable } from "../../utils/api";
+import TableForm from "./TableForm";
 import ErrorAlert from "../ErrorAlert"
 
-function AddReservation(){
+function AddTable(){
 
     const history = useHistory()
 
     const[reservationError, SetReservationError]=useState(null)
 
-    async function create(reservation){
+    async function create(table){
         const abortController = new AbortController();
         try{
-             await createReservation(reservation)
-            history.push(`/dashboard?date=${reservation.reservation_date}`)
+             await createTable(table)
+            history.push(`/`)
 
         }
         catch(err){
@@ -27,11 +27,12 @@ function AddReservation(){
 
     return (
         <div>
-            <ReservationForm create={create}/>
+            <TableForm create={create}/>
             <ErrorAlert error={reservationError}/>
         </div>
     )
 
 }
 
-export default AddReservation
+
+export default AddTable

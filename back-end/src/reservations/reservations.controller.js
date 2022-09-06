@@ -2,17 +2,19 @@
  * List handler for reservation resources
  */
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary')
-
 const reservationsService = require('./reservations.service')
 const hasProperties = require('../errors/hasProperties')
 const hasRequiredProperties = hasProperties("first_name", "last_name", "mobile_number", "reservation_date", "reservation_time", "people")
 
 function validateDateProperty(req, res, next){
-  const {data: {reservation_date}={}}= req.body
+  const {data: {reservation_date, reservation_time}={}}= req.body
   const arr = reservation_date.split('-')
 
-  const reservationDate = new Date(reservation_date)
+  const DateString = reservation_date+'T'+reservation_time+':00'
+  const reservationDate = new Date(DateString)
+
   const day = reservationDate.getUTCDay()
+
   const todayDate = new Date()
   let errorMessage = ``
   let errorExists = false
@@ -92,14 +94,17 @@ async function list(req, res) {
 }
 
 async function reservationExists(req, res, next){
-  console.log(req.query.date)
-  const reservation = await reservationsService.read(req.query.date)
-  console.log(reservation)
+  const reservation = await reservationsService.read(req.params.reservation_id)
   if(reservation){
     res.locals.reservation = reservation
     return next()
   }
   next({status: 404, message: 'Reservation cannot be found'})
+}
+
+async function read(req, res, next){
+const data = res.locals.reservation
+res.json({data})
 }
 
 
@@ -110,5 +115,6 @@ async function create(req, res, next){
 
 module.exports = {
   list: asyncErrorBoundary(list),
+  read:[reservationExists, asyncErrorBoundary(read)],
   create: [hasRequiredProperties, validateDateProperty, validateTimeProperty, validatePeopleProperty, asyncErrorBoundary(create)]
 };
