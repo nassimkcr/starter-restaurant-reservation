@@ -64,7 +64,6 @@ function validateTimeProperty(req, res, next){
     next({ status: 400, message: `reservation_time: restaurent closed` });
   }
   
-  
      next()
 }
 
@@ -99,7 +98,7 @@ async function reservationExists(req, res, next){
     res.locals.reservation = reservation
     return next()
   }
-  next({status: 404, message: 'Reservation cannot be found'})
+  next({status: 404, message: `Reservation: ${req.params.reservation_id} cannot be found`})
 }
 
 async function read(req, res, next){
@@ -109,12 +108,49 @@ res.json({data})
 
 
 async function create(req, res, next){
+  const reservation = req.body.data
+  if(reservation.status === "seated"){
+    next({status: 400, message: 'Reservation is already seated'})
+  }
+  if(reservation.status === "finished"){
+    next({status: 400, message: 'Reservation is already finished'})
+  }
+
   const data = await reservationsService.create(req.body.data)
   res.status(201).json({data})
+}
+
+async function checkStatus(req, res, next){
+
+  const {status} = res.locals.reservation
+  if(req.body.data.status !== "seated" && req.body.data.status !== "finished" && req.body.data.status !== "booked"){
+    next({status: 400, message: 'Reservation is unknown'})
+  }
+  
+  
+  if(status){
+    if(status === "seated"){
+      next({status: 400, message: 'Reservation is already seated'})
+    }
+    if(status === "finished"){
+      next({status: 400, message: 'Reservation is already finished'})
+    }
+   
+    return next()
+  }
+  next()
+  
+}
+
+
+async function updateStatus(req, res, next){
+  const data = await reservationsService.updateStatus(req.params.reservation_id, req.body.data.status)
+  res.status(200).json({data})
 }
 
 module.exports = {
   list: asyncErrorBoundary(list),
   read:[reservationExists, asyncErrorBoundary(read)],
-  create: [hasRequiredProperties, validateDateProperty, validateTimeProperty, validatePeopleProperty, asyncErrorBoundary(create)]
+  create: [hasRequiredProperties, validateDateProperty, validateTimeProperty, validatePeopleProperty, asyncErrorBoundary(create)],
+  updateStatus: [reservationExists, checkStatus, asyncErrorBoundary(updateStatus)],
 };

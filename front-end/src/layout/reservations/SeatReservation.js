@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { listTables, updateTable } from "../../utils/api"
+import { listTables, updateTable, updateReservationStatus } from "../../utils/api"
 import { Link, useHistory, useParams } from "react-router-dom"
 import ErrorAlert from "../ErrorAlert"
 function SeatReservation(){
@@ -32,6 +32,7 @@ async function handleSubmit(event){
     event.preventDefault()
     try {
         await updateTable(tableId, reservation_id)
+        
     history.push('/')
     } catch (err) {
         SetReservationError(err)

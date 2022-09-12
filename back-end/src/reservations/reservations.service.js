@@ -5,7 +5,7 @@ async function list(){
 }
 
 async function listByDate(reservation_date){
-    return knex('reservations').select('*').where({reservation_date}).orderBy("reservation_time")
+    return knex('reservations').select('*').where({reservation_date}).whereNot({status: 'finished'}).orderBy("reservation_time")
 }
 async function create(reservation){
     return knex("reservations").insert(reservation).returning("*").then((createdRecords)=>createdRecords[0])
@@ -15,4 +15,8 @@ async function read(reservation_id){
     return knex('reservations').select('*').where({reservation_id}).first()
 }
 
-module.exports = {list, listByDate, create, read}
+async function updateStatus(reservation_id, status){
+    return knex('reservations').select('*').where({reservation_id}).update({status}).returning("*").then((updatedRecords)=>updatedRecords[0])
+}
+
+module.exports = {list, listByDate, create, read, updateStatus}

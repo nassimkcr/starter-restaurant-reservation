@@ -3,7 +3,6 @@
 
 function ViewReservation({reservation, index}){
     const {reservation_id} = reservation
-    console.log(reservation)
     return <div key={index}>
         <h4>Reservation Informations</h4>
       <p>First name: {reservation.first_name}</p> 
@@ -11,10 +10,13 @@ function ViewReservation({reservation, index}){
        <p>Mobile number: {reservation.mobile_number}</p>
        <p>Reservation date: {reservation.reservation_date}</p>
        <p>Number of People: {reservation.people}</p>
-       <p data-reservation-id-status={reservation.reservation_id}>Status: booked</p>
-       <a href={`/reservations/${reservation_id}/seat`}>
+       <p data-reservation-id-status={reservation.reservation_id}>Status: {reservation.status}</p>
+       {reservation.status === "booked" ?<a href={`/reservations/${reservation_id}/seat`}>
             <button type="button">Seat</button>
-       </a>
+       </a>: null
+        
+       }
+       
        <hr></hr>
     </div>
 }

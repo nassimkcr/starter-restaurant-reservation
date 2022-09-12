@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables, finishReservation } from "../utils/api";
+import { listReservations, listTables, finishReservation, updateReservationStatus } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import useQuery from "../utils/useQuery";
 import ViewReservation from "../layout/reservations/ViewReservation";
@@ -59,9 +59,9 @@ if(!reservations.length && firstRender){
 
 
 
-async function deleteReservation(table_id){
+async function deleteReservation(table_id, reservation_id){
   if (window.confirm('Is this table ready to seat new guests? This cannot be undone.')) {
-    await finishReservation(table_id)
+    await finishReservation(table_id, reservation_id)
     window.location.reload(false)
 
   }
@@ -91,7 +91,7 @@ async function deleteReservation(table_id){
                       <p>Table capacity: {table.capacity}</p>
                       <p data-table-id-status={table.table_id}>Status: {table.reservation_id?'Occupied':'Free'}</p>
                     
-                      {table.reservation_id?<button data-table-id-finish={table.table_id} onClick={()=>deleteReservation(table.table_id)}>Finish</button>:null}
+                      {table.reservation_id?<button data-table-id-finish={table.table_id} onClick={()=>deleteReservation(table.table_id, table.reservation_id)}>Finish</button>:null}
                       <hr></hr>
             
             </div>})

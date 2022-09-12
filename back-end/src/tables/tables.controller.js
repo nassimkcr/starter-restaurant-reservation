@@ -4,7 +4,6 @@ const reservationsService = require('../reservations/reservations.service')
 const hasProperties = require('../errors/hasProperties');
 
 
-
 const hasRequiredProperties = hasProperties("table_name", "capacity")
 
 
@@ -53,6 +52,10 @@ async function create(req, res, next){
   const table = await tablesService.read(req.params.table_id)
   
   if(reservation){
+    if(reservation.status === "seated"){
+      next({ status: 400, message: `reservation is already seated` });
+
+    }
     if(table.reservation_id){
       next({ status: 400, message: `table is already occupied` });
     }
@@ -71,10 +74,10 @@ async function create(req, res, next){
 
 
 async function update(req, res, next){
-  
-  const data = await tablesService.update(req.params.table_id, req.body.data.reservation_id)
 
-  res.json({ data });
+  await reservationsService.updateStatus(req.body.data.reservation_id, "seated")
+  const data = await tablesService.update(req.params.table_id, req.body.data.reservation_id)
+  res.status(200).json({ data });
 
 }  
 
@@ -92,7 +95,9 @@ async function validateFinishReservation(req, res, next){
 }
 
 async function finishReservation(req, res, next){
- 
+  const {reservation_id} = req.body.data
+  await reservationsService.updateStatus(reservation_id, "finished")
+
   await tablesService.finishReservation(req.params.table_id)
   res.status(200).json({data: {message: 'Reservation finished'}})
 

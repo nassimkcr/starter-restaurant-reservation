@@ -107,9 +107,23 @@ export async function updateTable(table_id, reservation_id){
 
   }
 
-  export async function finishReservation(table_id){
+  export async function finishReservation(table_id, reservation_id){
     const url = `${API_BASE_URL}/tables/${table_id}/seat`
 
-    const options = { method: "DELETE" };
+    const options = { method: "DELETE",
+                      headers,
+                      body: JSON.stringify({ data: { reservation_id: reservation_id }})
+                    };
     return await fetchJson(url, options);
+  }
+
+  export async function updateReservationStatus(reservation_id, newStatus){
+    const url = `${API_BASE_URL}/reservations/${reservation_id}/status`
+
+    const options={
+      method: "PUT",
+      headers,
+      body: JSON.stringify({ data: { status: newStatus }})
+    }
+    return await fetchJson(url, options, {})
   }
