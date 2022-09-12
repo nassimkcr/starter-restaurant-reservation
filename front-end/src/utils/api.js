@@ -127,3 +127,4 @@ export async function updateTable(table_id, reservation_id){
     }
     return await fetchJson(url, options, {})
   }
+

@@ -81,15 +81,24 @@ function validatePeopleProperty(req, res, next){
 }
 
 async function list(req, res) { 
-  let {date} = req.query
+  let {date, mobile_number} = req.query
   if(date){
     const data = await reservationsService.listByDate(date)
     return res.json({data})
   }
-  const data = await reservationsService.list()
-  res.json({
-    data
-  });
+  
+  else if(mobile_number){
+    const data = await reservationsService.search(mobile_number)
+    return res.json({data})
+
+  }
+  else{
+    const data = await reservationsService.list()
+    res.json({
+      data
+    });
+  }
+  
 }
 
 async function reservationExists(req, res, next){
@@ -141,6 +150,7 @@ async function checkStatus(req, res, next){
   next()
   
 }
+
 
 
 async function updateStatus(req, res, next){
