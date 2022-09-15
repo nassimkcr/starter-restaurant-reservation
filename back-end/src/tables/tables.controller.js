@@ -83,7 +83,6 @@ async function update(req, res, next){
 
 async function validateFinishReservation(req, res, next){
   const table = await tablesService.read(req.params.table_id)
-  
   if(!table){
     return next({ status: 404, message: `${req.params.table_id}: table is not found` });
   }
@@ -91,11 +90,14 @@ async function validateFinishReservation(req, res, next){
   if(!table.reservation_id){
       return next({ status: 400, message: `table is not occupied` });
     }
+  if(table){
+    res.locals.table = table
+  }
   return next() 
 }
 
 async function finishReservation(req, res, next){
-  const {reservation_id} = req.body.data
+  const {reservation_id} = res.locals.table
   await reservationsService.updateStatus(reservation_id, "finished")
 
   await tablesService.finishReservation(req.params.table_id)
