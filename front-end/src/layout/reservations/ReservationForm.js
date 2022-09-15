@@ -33,7 +33,7 @@ function ReservationForm({create}){
 
               <div>
                     <label htmlFor="mobile_number">Mobile Number</label>
-                    <input name="mobile_number" type="text" onChange={handleChange} value={formData.number}></input>
+                    <input name="mobile_number" type="text" onChange={handleChange} value={formData.mobile_number}></input>
               </div> 
               <div>
                     <label htmlFor="reservation_date">Date of reservation</label>

@@ -129,10 +129,19 @@ async function create(req, res, next){
   res.status(201).json({data})
 }
 
+async function update(req, res) {
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id: res.locals.reservation.reservation_id,
+  };
+  const data = await reservationsService.update(res.locals.reservation.reservation_id, updatedReservation);
+  res.json({ data });
+}
+
 async function checkStatus(req, res, next){
 
   const {status} = res.locals.reservation
-  if(req.body.data.status !== "seated" && req.body.data.status !== "finished" && req.body.data.status !== "booked"){
+  if(req.body.data.status !== "seated" && req.body.data.status !== "finished" && req.body.data.status !== "booked" && req.body.data.status !== "cancelled"){
     next({status: 400, message: 'Reservation is unknown'})
   }
   
@@ -163,4 +172,5 @@ module.exports = {
   read:[reservationExists, asyncErrorBoundary(read)],
   create: [hasRequiredProperties, validateDateProperty, validateTimeProperty, validatePeopleProperty, asyncErrorBoundary(create)],
   updateStatus: [reservationExists, checkStatus, asyncErrorBoundary(updateStatus)],
+  update: [reservationExists, hasRequiredProperties, validateDateProperty, validateTimeProperty, validatePeopleProperty, asyncErrorBoundary(update)]
 };

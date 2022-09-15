@@ -78,7 +78,7 @@ async function deleteReservation(table_id, reservation_id){
       <ErrorAlert error={reservationsError} />
       <div>
        {reservations.map((reservation, index)=>{
-        return <ViewReservation reservation={reservation} key={index}/>
+        return reservation.status === "cancelled"?<></>:<ViewReservation reservation={reservation} key={index}/>
        })}
       </div>
       <div className="d-md-flex mb-3">

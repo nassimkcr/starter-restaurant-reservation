@@ -29,4 +29,8 @@ async function updateStatus(reservation_id, status){
     return knex('reservations').select('*').where({reservation_id}).update({status}).returning("*").then((updatedRecords)=>updatedRecords[0])
 }
 
-module.exports = {list, listByDate, create, read, updateStatus, search}
+async function update(reservation_id, updatedReservation){
+    return knex('reservations').select('*').where({reservation_id}).update(updatedReservation).returning("*").then((updatedRecords)=>updatedRecords[0])
+}
+
+module.exports = {list, listByDate, create, read, updateStatus, search, update}
