@@ -1,11 +1,10 @@
-import React, {useState} from "react";
-import { Link, useHistory } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 
 
 
-function ReservationForm({create}){
-    const [formData, setFormData] = useState({first_name:'', last_name:'', mobile_number:'', reservation_date:'', reservation_time:'', people:1})
-    const history = useHistory()
+function ReservationForm({handleFormSubmission, formData, setFormData}){
+    
 
     const handleChange = ({target})=>{
         setFormData({...formData, [target.name]:target.value})
@@ -15,7 +14,7 @@ function ReservationForm({create}){
         event.preventDefault()
         const num = Number(formData.people)
         formData.people = num
-        create(formData)
+        handleFormSubmission(formData)
     }
     
     return (

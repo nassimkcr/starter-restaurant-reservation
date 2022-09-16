@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function TableForm({create}){
 const [formData, setFormData]= useState({table_name:'', capacity:''})
@@ -9,6 +9,10 @@ const handleChange = ({target})=>{
     setFormData({...formData, [target.name]:target.value})
 }
 
+function cancelHandler(event) {
+    event.preventDefault();
+    history.goBack();
+}
 
 
 function handleSubmit(event){
@@ -32,7 +36,7 @@ function handleSubmit(event){
                     <input name="capacity" type="number" onChange={handleChange} value={formData.capacity}/>
             </div>
                 
-                    <button value="Cancel" className="btn btn-secondary" onClick={() => history.goBack()}>Cancel</button>
+                    <button value="Cancel" className="btn btn-secondary" onClick={cancelHandler}>Cancel</button>
                     <button type="submit" className="btn btn-primary mx-2" onClick={handleSubmit} >Submit</button>
             </form>
         </div>

@@ -1,10 +1,11 @@
 import React, {useState} from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { createReservation } from "../../utils/api";
 import ReservationForm from "./ReservationForm";
 import ErrorAlert from "../ErrorAlert"
 
 function AddReservation(){
+    const [formData, setFormData] = useState({first_name:'', last_name:'', mobile_number:'', reservation_date:'', reservation_time:'', people:1})
 
     const history = useHistory()
 
@@ -25,9 +26,11 @@ function AddReservation(){
         }
     }
 
+   
+
     return (
         <div>
-            <ReservationForm create={create}/>
+            <ReservationForm handleFormSubmission={create} formData={formData} setFormData={setFormData}/>
             <ErrorAlert error={reservationError}/>
         </div>
     )

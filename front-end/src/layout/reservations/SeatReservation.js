@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { listTables, updateTable, updateReservationStatus } from "../../utils/api"
+import { listTables, updateTable } from "../../utils/api"
 import { Link, useHistory, useParams } from "react-router-dom"
 import ErrorAlert from "../ErrorAlert"
 function SeatReservation(){
@@ -11,7 +11,6 @@ const {reservation_id} = useParams()
 const history = useHistory()
 
 const handleChange = ({target})=>{
-    console.log(target.value)
         setTableId(target.value)
     } 
 
@@ -24,7 +23,6 @@ useEffect(()=>{
         setTables(response)
     }
     loadTables()
-    console.log(tables)
     return () => abortController.abort();
 },[])
 
@@ -52,8 +50,8 @@ async function handleSubmit(event){
                 </label> <br></br>
                 <select name="table_id" value={tableId} onChange={handleChange}>
                     <option value=''>--Choose--</option>
-                    {tables.map((table)=>{
-                        return <option value={table.table_id}>{table.table_name} - {table.capacity}</option>
+                    {tables.map((table, index)=>{
+                        return <option key={index} value={table.table_id}>{table.table_name} - {table.capacity}</option>
                     })}
                 </select>
                 </div>

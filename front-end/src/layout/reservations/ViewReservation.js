@@ -3,7 +3,7 @@ import { updateReservationStatus } from "../../utils/api"
 
 
 function ViewReservation({reservation, index}){
-    const {reservation_id, status} = reservation
+    const {reservation_id} = reservation
 
 
    async function handleCancel(){

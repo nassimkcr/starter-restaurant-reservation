@@ -120,7 +120,6 @@ export async function updateTable(table_id, reservation_id){
   export async function updateReservationStatus(reservation_id, newStatus){
     
     const url = `${API_BASE_URL}/reservations/${reservation_id}/status`
-    console.log(url)
 
     const options={
       method: "PUT",
@@ -139,7 +138,6 @@ export async function updateTable(table_id, reservation_id){
 
   export async function updateReservation(updatedReservation){
     const url = `${API_BASE_URL}/reservations/${updatedReservation.reservation_id}`
-    console.log(url)
   const options={
     method: "PUT",
     headers,

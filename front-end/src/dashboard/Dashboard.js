@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables, finishReservation, updateReservationStatus } from "../utils/api";
+import { listReservations, listTables, finishReservation} from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import useQuery from "../utils/useQuery";
 import ViewReservation from "../layout/reservations/ViewReservation";
 import { today } from "../utils/date-time";
-import { useHistory } from "react-router";
 
 /**
  * Defines the dashboard page.
@@ -16,19 +15,19 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const[tables, setTables]= useState([])
+  let firstRender = 0
   const todayDate = today()
   const query = useQuery();
-  const history = useHistory()
-  let firstRender = 0
   date = query.get("date")
   
   if(!date){
     date = todayDate
   }
-  const abortController = new AbortController();
 
     
   useEffect(()=>{
+    const abortController = new AbortController();
+
 
     async function loadDashboard() {
       setReservationsError(null);
@@ -37,9 +36,11 @@ function Dashboard({ date }) {
         setReservations(response)
         response= await listTables(abortController.signal)
         setTables(response)
-        firstRender=1
+        firstRender = 1
+
     }
     loadDashboard()
+
     return () => abortController.abort();
 
   },[date]);
@@ -78,7 +79,7 @@ async function deleteReservation(table_id, reservation_id){
       <ErrorAlert error={reservationsError} />
       <div>
        {reservations.map((reservation, index)=>{
-        return reservation.status === "cancelled"?<></>:<ViewReservation reservation={reservation} key={index}/>
+        return reservation.status === "cancelled"?null:<ViewReservation reservation={reservation} key={index}/>
        })}
       </div>
       <div className="d-md-flex mb-3">
@@ -86,6 +87,7 @@ async function deleteReservation(table_id, reservation_id){
       </div>
       <ErrorAlert error={reservationsError} />
       <div>
+        
         {tables.map((table, index)=>{
           return <div key={index}><p>Table name: {table.table_name}</p>
                       <p>Table capacity: {table.capacity}</p>
