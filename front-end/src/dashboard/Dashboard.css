@@ -1,0 +1,86 @@
+
+main{
+    min-height: 800px;
+    background-color: #EBE9E6;
+    text-align: center;
+    
+}
+h1{
+    font-style: italic;
+    text-decoration: underline;
+}
+
+h4{
+    font-style: italic;
+}
+
+
+.date-title{
+    max-width: 33%;
+    margin: auto;
+    padding: 10px 0px;
+    
+}
+
+.form-group{
+    width: 60%;
+    margin: 60px auto;
+    background-color: #f1fdf8;
+    border-radius: 10px;
+
+}
+
+
+.form-group button{
+    width: 15%;
+    margin: 20px ;
+}
+.form-group label{
+    font-style: italic;
+    margin: 20px 0px ;
+}
+
+#search-input{
+    width: 50%;
+    margin: auto;
+}
+
+.rs-group{
+    width: 30%;
+    margin: 2px auto;
+
+}
+
+#rs-form{
+    background-color: #f1fdf8;
+    max-width: 700px;
+    margin: 10px auto;
+    padding-bottom: 40px;
+    border-radius: 10px;
+}
+
+#rs-form button{
+    margin: 25px 15px;
+}
+
+#tb-form{
+    background-color: #f1fdf8;
+    max-width: 500px;
+    min-height: 500px;
+    margin: 10px auto;
+    padding-bottom: 40px;
+    border-radius: 10px; 
+}
+
+#tb-form .form-group{
+    width: 60%;
+    margin: 20px auto;
+    background-color: #f1fdf8;
+    border-radius: 10px;
+
+}
+
+#tb-form h2{
+    padding-top: 10px;
+    font-style: italic;
+}

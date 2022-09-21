@@ -20,6 +20,7 @@ function AddReservation(){
         }
         catch(err){
             SetReservationError(err)
+
         }
         finally{
             return () => abortController.abort()
@@ -27,12 +28,11 @@ function AddReservation(){
     }
 
    
-
     return (
-        <div>
+        <main>
+             <ErrorAlert error={reservationError}/>
             <ReservationForm handleFormSubmission={create} formData={formData} setFormData={setFormData}/>
-            <ErrorAlert error={reservationError}/>
-        </div>
+        </main>
     )
 
 }

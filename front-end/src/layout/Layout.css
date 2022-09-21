@@ -1,4 +1,19 @@
-.side-bar {
-  background-color: #393a44;
-  min-width: 200px;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,500&display=swap');
+
+body{
+  font-family: 'Roboto', sans-serif;
+
 }
+
+.col{
+  background-color: #EBE9E6;
+}
+
+.side-bar {
+  background-color: rgb(81, 151, 179);
+  min-width: 300px;
+
+}
+
+
+

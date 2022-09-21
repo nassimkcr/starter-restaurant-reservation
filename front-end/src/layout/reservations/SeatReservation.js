@@ -42,13 +42,13 @@ async function handleSubmit(event){
 
 
     return(
-        <div>
+        <main>
             <form>
-                <div>
+                <div className="form-group">
                 <label htmlFor="table_id">
-                    Choose a table for the reservation:
+                   <h3>Choose a table for the reservation:</h3> 
                 </label> <br></br>
-                <select name="table_id" value={tableId} onChange={handleChange}>
+                <select name="table_id" className="form-control form-control-md" value={tableId} onChange={handleChange}>
                     <option value=''>--Choose--</option>
                     {tables.map((table, index)=>{
                         return <option key={index} value={table.table_id}>{table.table_name} - {table.capacity}</option>
@@ -62,7 +62,7 @@ async function handleSubmit(event){
             
             </form>
             <ErrorAlert error={reservationError}/>
-        </div>
+        </main>
         
     )
 }

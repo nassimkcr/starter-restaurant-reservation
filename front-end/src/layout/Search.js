@@ -2,6 +2,9 @@ import { useState } from "react";
 import { listReservations } from "../utils/api";
 import ViewReservation from "./reservations/ViewReservation";
 
+/*
+define the search page for the application
+*/
 
 function Search(){
 const [reservations, setReservations] = useState([]);
@@ -22,11 +25,13 @@ setReservations(response)
 setSearched(true)
     }
 
-    return <div>
-        <label htmlFor="mobile_number">Enter mobile number</label>
-        <input name="mobile_number" placeholder="Enter a customer's phone number" onChange={handleChange} value={mobileNumber}></input>
-        <button type="submit" className="btn btn-primary mx-2" onClick={handleFind}>Find</button>
-
+    return <main>
+        <div className="form-group">
+            <label htmlFor="mobile_number"><h3>Search for Reservation by Mobile Number</h3></label>
+            <input name="mobile_number" className="form-control form-control-lg" id="search-input" placeholder="Enter a customer's phone number" onChange={handleChange} value={mobileNumber}></input>
+            <button type="submit" className="btn btn-primary mx-2" onClick={handleFind}>Find</button>
+        </div>
+       
         <div>
             {searched? <div>
             {reservations.length? reservations.map((reservation, index)=>{
@@ -39,7 +44,7 @@ setSearched(true)
        
         </div>
         
-    </div>
+    </main>
 }
 
 

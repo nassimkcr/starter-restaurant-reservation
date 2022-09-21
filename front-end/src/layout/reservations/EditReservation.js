@@ -48,12 +48,11 @@ async function update(reservation){
 }
 
 
-
 return (
-    <div>
-        <ReservationForm handleFormSubmission={update} formData={formData} setFormData={setFormData}/>
+    <main>
         <ErrorAlert error={reservationError}/>
-    </div>
+        <ReservationForm handleFormSubmission={update} formData={formData} setFormData={setFormData}/>
+    </main>
 )
 
 

@@ -26,21 +26,7 @@ next()
 
 }
 
-async function list(req, res, next){
-  const data = await tablesService.listByName()
-  res.json({
-    data
-  });
-}
-
-async function create(req, res, next){
-    const data = await tablesService.create(req.body.data)
-    res.status(201).json({data})
-  }
-
-
-
-  async function validateSeating(req, res, next){ 
+async function validateSeating(req, res, next){ 
   const { data = {} } = req.body;
   const {reservation_id} = data
   if(Object.keys(data).length === 0){
@@ -69,17 +55,7 @@ async function create(req, res, next){
 
   }
   
-
 }
-
-
-async function update(req, res, next){
-
-  await reservationsService.updateStatus(req.body.data.reservation_id, "seated")
-  const data = await tablesService.update(req.params.table_id, req.body.data.reservation_id)
-  res.status(200).json({ data });
-
-}  
 
 async function validateFinishReservation(req, res, next){
   const table = await tablesService.read(req.params.table_id)
@@ -96,13 +72,34 @@ async function validateFinishReservation(req, res, next){
   return next() 
 }
 
+async function list(req, res, next){
+  const data = await tablesService.listByName()
+  res.json({
+    data
+  });
+}
+
+async function create(req, res, next){
+    const data = await tablesService.create(req.body.data)
+    res.status(201).json({data})
+  }
+
+
+async function update(req, res, next){
+
+  await reservationsService.updateStatus(req.body.data.reservation_id, "seated")
+  const data = await tablesService.update(req.params.table_id, req.body.data.reservation_id)
+  res.status(200).json({ data });
+
+}  
+
+
 async function finishReservation(req, res, next){
   const {reservation_id} = res.locals.table
   await reservationsService.updateStatus(reservation_id, "finished")
 
   await tablesService.finishReservation(req.params.table_id)
   res.status(200).json({data: {message: 'Reservation finished'}})
-
 
 }
 
@@ -112,6 +109,6 @@ async function finishReservation(req, res, next){
   module.exports={
     list,
     create: [hasRequiredProperties, hasValidPropreties, asyncErrorBoundary(create)],
-    update: [validateSeating, asyncErrorBoundary(update)],
-    finishReservation: [validateFinishReservation, asyncErrorBoundary(finishReservation)]
+    update: [asyncErrorBoundary(validateSeating), asyncErrorBoundary(update)],
+    finishReservation: [asyncErrorBoundary(validateFinishReservation), asyncErrorBoundary(finishReservation)]
   }

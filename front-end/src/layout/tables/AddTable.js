@@ -26,10 +26,10 @@ function AddTable(){
     }
 
     return (
-        <div>
+        <main>
             <TableForm create={create}/>
             <ErrorAlert error={reservationError}/>
-        </div>
+        </main>
     )
 
 }

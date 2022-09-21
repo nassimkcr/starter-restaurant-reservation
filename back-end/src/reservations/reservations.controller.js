@@ -6,6 +6,7 @@ const reservationsService = require('./reservations.service')
 const hasProperties = require('../errors/hasProperties')
 const hasRequiredProperties = hasProperties("first_name", "last_name", "mobile_number", "reservation_date", "reservation_time", "people")
 
+
 function validateDateProperty(req, res, next){
   const {data: {reservation_date, reservation_time}={}}= req.body
   const arr = reservation_date.split('-')
@@ -80,6 +81,41 @@ function validatePeopleProperty(req, res, next){
   
 }
 
+function checkStatus(req, res, next){
+
+  const {status} = res.locals.reservation
+  if(req.body.data.status !== "seated" && req.body.data.status !== "finished" && req.body.data.status !== "booked" && req.body.data.status !== "cancelled"){
+    next({status: 400, message: 'Reservation is unknown'})
+  }
+  
+  
+  if(status){
+
+    if(req.body.data.status === "cancelled"){return next()}
+
+    if(status === "seated"){
+      next({status: 400, message: 'Reservation is already seated'})
+    }
+    if(status === "finished"){
+      next({status: 400, message: 'Reservation is already finished'})
+    }
+   
+    return next()
+  }
+  next()
+  
+}
+
+async function reservationExists(req, res, next){
+  const reservation = await reservationsService.read(req.params.reservation_id)
+  if(reservation){
+    res.locals.reservation = reservation
+    return next()
+  }
+  next({status: 404, message: `Reservation: ${req.params.reservation_id} cannot be found`})
+}
+
+
 async function list(req, res) { 
   let {date, mobile_number} = req.query
   if(date){
@@ -101,15 +137,6 @@ async function list(req, res) {
   
 }
 
-async function reservationExists(req, res, next){
-  const reservation = await reservationsService.read(req.params.reservation_id)
-  if(reservation){
-    res.locals.reservation = reservation
-    return next()
-  }
-  next({status: 404, message: `Reservation: ${req.params.reservation_id} cannot be found`})
-}
-
 async function read(req, res, next){
 const data = res.locals.reservation
 res.json({data})
@@ -129,35 +156,16 @@ async function create(req, res, next){
   res.status(201).json({data})
 }
 
-async function update(req, res) {
+async function update(req, res, next) {
+  if(res.locals.reservation.status !== "booked"){   
+     next({status: 400, message: 'Reservation can only be edited when status is "booked"'})
+}
   const updatedReservation = {
     ...req.body.data,
     reservation_id: res.locals.reservation.reservation_id,
   };
   const data = await reservationsService.update(res.locals.reservation.reservation_id, updatedReservation);
   res.json({ data });
-}
-
-async function checkStatus(req, res, next){
-
-  const {status} = res.locals.reservation
-  if(req.body.data.status !== "seated" && req.body.data.status !== "finished" && req.body.data.status !== "booked" && req.body.data.status !== "cancelled"){
-    next({status: 400, message: 'Reservation is unknown'})
-  }
-  
-  
-  if(status){
-    if(status === "seated"){
-      next({status: 400, message: 'Reservation is already seated'})
-    }
-    if(status === "finished"){
-      next({status: 400, message: 'Reservation is already finished'})
-    }
-   
-    return next()
-  }
-  next()
-  
 }
 
 
@@ -169,8 +177,8 @@ async function updateStatus(req, res, next){
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  read:[reservationExists, asyncErrorBoundary(read)],
+  read:[asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
   create: [hasRequiredProperties, validateDateProperty, validateTimeProperty, validatePeopleProperty, asyncErrorBoundary(create)],
-  updateStatus: [reservationExists, checkStatus, asyncErrorBoundary(updateStatus)],
-  update: [reservationExists, hasRequiredProperties, validateDateProperty, validateTimeProperty, validatePeopleProperty, asyncErrorBoundary(update)]
+  updateStatus: [asyncErrorBoundary(reservationExists), checkStatus, asyncErrorBoundary(updateStatus)],
+  update: [asyncErrorBoundary(reservationExists), hasRequiredProperties, validateDateProperty, validateTimeProperty, validatePeopleProperty, asyncErrorBoundary(update)]
 };
