@@ -40,6 +40,28 @@ This is a full stack restaurant reservation management web application that allo
 ### *6/ Seat reservation at free table (only tables not occupied available to select):*
 ![Screen Shot 2022-09-21 at 6 33 03 PM](https://user-images.githubusercontent.com/92671036/191622091-b46717c1-82a2-41a4-aea2-54e38022beb2.png)
 
+## API Endpoints:
+
+| Method | Path                                     | Function                                                                |
+|--------|------------------------------------------|-------------------------------------------------------------------------|
+| GET    | /reservations                            | list reservations for current date                                      |
+| POST   | /reservations                            | create new reservation                                                  |
+| GET    | /reservations/:reservation_id            | list reservation by id                                                  |
+| PUT    | /reservations/:reservation_id            | update reservation                                                      |
+| GET    | /reservations?mobile_number=xxx-xxx-xxxx | list reservations for specified mobile number                           |
+| GET    | /reservations?date=YYYY-MM-DD            | list reservation for specified date                                     |
+| PUT    | /reservations/:reservation_id/status     | update reservation status                                               |
+| GET    | /tables                                  | list all tables                                                         |
+| POST   | /tables                                  | create new table                                                        |
+| PUT    | /tables/:table_id/seat                   | update table with reservation_id from body, update reservation status   |
+| DELETE | /tables/:table_id/seat                   | remove reservation_id from table, update reservation status to finished |
 
 
+## Installation 
+
+1. Fork and clone this repository.
+2. Create and update ```./back-end/.env``` file with the connection URL's to your database instance.
+3. You should not need to make changes to the ./front-end/.env file unless you want to connect to a backend at a location other than http://localhost:5001.
+4. Run ```npm install``` to install project dependencies.
+5. Run ```npm run start:dev``` to start your server in development mode.
 
